@@ -59,7 +59,15 @@ def display(values):
     return
 
 def eliminate(values):
-    pass
+    values = []
+    all_digits = '123456789'
+    for c in grid:
+        if c == '.':
+            values.append(all_digits)
+        elif c in all_digits:
+            values.append(c)
+    assert len(values) == 81
+    return dict(zip(boxes, values))
 
 def only_choice(values):
     pass
