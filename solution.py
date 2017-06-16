@@ -1,5 +1,9 @@
 assignments = []
 
+rows = 'ABCDEFGHI'
+cols = '123456789'
+boxes = cross(rows, cols)
+
 
 def assign_value(values, box, value):
     """
