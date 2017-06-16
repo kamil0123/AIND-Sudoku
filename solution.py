@@ -1,5 +1,6 @@
 assignments = []
 
+
 def assign_value(values, box, value):
     """
     Please use this function to update your values dictionary!
@@ -41,8 +42,15 @@ def grid_values(grid):
             Keys: The boxes, e.g., 'A1'
             Values: The value in each box, e.g., '8'. If the box has no value, then the value will be '123456789'.
     """
-    assert len(grid) == 81, "Input grid must be a string of length 81 (9x9)"
-    return dict(zip(boxes, grid))
+    chars = []
+    digits = '123456789'
+    for c in grid:
+        if c in digits:
+            chars.append(c)
+        if c == '.':
+            chars.append(digits)
+    assert len(chars) == 81
+    return dict(zip(boxes, chars))
 
 def display(values):
     """
@@ -114,6 +122,14 @@ def solve(grid):
         The dictionary representation of the final sudoku grid. False if no solution exists.
 
     """
+    values = grid_values(grid)
+    isSolved = search(values)
+    
+    if isSolved:
+        return isSolved
+    else:
+        return False
+    
     solved_values = [box for box in values.keys() if len(values[box]) == 1]
     stalled = False
     while not stalled:
