@@ -1,10 +1,5 @@
 assignments = []
 
-rows = 'ABCDEFGHI'
-cols = '123456789'
-boxes = cross(rows, cols)
-
-
 def assign_value(values, box, value):
     """
     Please use this function to update your values dictionary!
@@ -20,6 +15,15 @@ def assign_value(values, box, value):
         assignments.append(values.copy())
     return values
 
+
+def cross(a, b):
+    "Cross product of elements in A and elements in B."
+    return [s+t for s in a for t in b]
+
+rows = 'ABCDEFGHI'
+cols = '123456789'
+boxes = cross(rows, cols)
+
 def naked_twins(values):
     """Eliminate values using the naked twins strategy.
     Args:
@@ -31,10 +35,6 @@ def naked_twins(values):
 
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
-
-def cross(a, b):
-    "Cross product of elements in A and elements in B."
-    return [s+t for s in a for t in b]
 
 def grid_values(grid):
     """
