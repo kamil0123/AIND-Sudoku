@@ -90,6 +90,7 @@ def eliminate(values):
         Resulting Sudoku in dictionary form after eliminating values.
     """
     solved_values = [box for box in values.keys() if len(values[box]) == 1]
+    
     for box in solved_values:
         digit = values[box]
         for peer in peers[box]:
@@ -105,18 +106,39 @@ def only_choice(values):
     return values
 
 def reduce_puzzle(values):
-    pass
+    """
+    Iterate eliminate() and only_choice(). If at some point, there is a box with no available values, return False.
+    If the sudoku is solved, return the sudoku.
+    If after an iteration of both functions, the sudoku remains the same, return the sudoku.
+    Input: A sudoku in dictionary form.
+    Output: The resulting sudoku in dictionary form.
+    """
+    solved_values = [box for box in values.keys() if len(values[box]) == 1]
+    stalled = False
+    while not stalled:
+        solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
+        values = eliminate(values)
+        values = only_choice(values)
+        solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
+        stalled = solved_values_before == solved_values_after
+        if len([box for box in values.keys() if len(values[box]) == 0]):
+            return False
+    return values
 
 def search(values):
     "Using depth-first search and propagation, create a search tree and solve the sudoku."
     # First, reduce the puzzle using the previous function
+
     values = reduce_puzzle(values)
     if values is False:
         return False ## Failed earlier
+
     if all(len(values[s]) == 1 for s in boxes): 
         return values ## Solved!
+    
     # Choose one of the unfilled squares with the fewest possibilities
     n,s = min((len(values[s]), s) for s in boxes if len(values[s]) > 1)
+    
     # Now use recurrence to solve each one of the resulting sudokus, and 
     for value in values[s]:
         new_sudoku = values.copy()
@@ -142,24 +164,9 @@ def solve(grid):
 
     """
     values = grid_values(grid)
-    isSolved = search(values)
-    
-    if isSolved:
-        return isSolved
-    else:
-        return False
-    
-    solved_values = [box for box in values.keys() if len(values[box]) == 1]
-    stalled = False
-    while not stalled:
-        solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
-        values = eliminate(values)
-        values = only_choice(values)
-        solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
-        stalled = solved_values_before == solved_values_after
-        if len([box for box in values.keys() if len(values[box]) == 0]):
-            return False
-    return values	
+    values = search(values)
+
+    return values
 
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
